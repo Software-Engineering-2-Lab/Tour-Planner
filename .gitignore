@@ -1,0 +1,17 @@
+# IDE-specific files
+.vscode/
+.idea/
+*.swp
+*.patch
+
+# OS-specific
+Thumbs.db
+.DS_Store
+
+# Local configuration
+.env
+
+# Database files
+postgres_data/
+TourPlanner/user_images/*
+!TourPlanner/user_images/.gitkeep
