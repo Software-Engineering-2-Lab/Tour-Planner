@@ -4,17 +4,20 @@ import { TourService } from '../../../../core/services/tour.service';
 import { Tour } from '../../../../core/models/tour.model';
 import { TourLog } from '../../../../core/models/tour-log.model';
 import { MapComponent } from '../map/map.component';
+import { LogModalComponent } from '../modals/log-modal/log-modal.component';
 
 @Component({
     selector: 'app-tour-detail',
     standalone: true,
-    imports: [CommonModule, MapComponent],
+    imports: [CommonModule, MapComponent, LogModalComponent],
     templateUrl: './tour-detail.component.html',
     styleUrl: './tour-detail.component.scss'
 })
 export class TourDetailComponent implements OnInit {
     selectedTour: Tour | null = null;
     tourLogs: TourLog[] = [];
+    isLogModalOpen = false;
+    selectedLogForEdit?: TourLog;
 
     constructor(private tourService: TourService) {}
 
@@ -25,5 +28,37 @@ export class TourDetailComponent implements OnInit {
                 this.tourLogs = this.tourService.getLogsForTour(tour.id);
             }
         });
+    }
+
+
+    openEditLog(log: TourLog): void {
+        this.selectedLogForEdit = log;
+        this.isLogModalOpen = true;
+    }
+
+    openLogModal(): void {
+        this.isLogModalOpen = true;
+    }
+
+    closeLogModal(): void {
+        this.isLogModalOpen = false;
+        this.selectedLogForEdit = undefined;
+    }
+
+    onDeleteLog(logId: number): void {
+        if (confirm('Are you sure you want to delete this log?')) {
+            this.tourService.deleteLog(logId, this.selectedTour!.id);
+        }
+    }
+
+    getFriendlyLabel(value: number | undefined): string {
+        if (!value) return '?';
+    
+        switch(value) {
+            case 1: return 'EASY';
+            case 2: return 'MEDIUM';
+            case 3: return 'HARD';
+            default: return 'MEDIUM';
+        }
     }
 }

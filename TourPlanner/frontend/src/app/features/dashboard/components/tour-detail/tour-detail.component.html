@@ -32,20 +32,33 @@
                 <span class="stat-label">EST. TIME</span>
             </div>
             <div class="stat-card">
-                <span class="stat-value">{{ selectedTour.popularity }}/5</span>
+                <span *ngIf="selectedTour?.popularity; else noData" class="stat-value">
+                    {{ selectedTour?.popularity }}/5 &#9733;
+                </span>
                 <span class="stat-label">POPULARITY</span>
             </div>
             <div class="stat-card">
-                <span class="stat-value">{{ selectedTour.childFriendliness }}/10</span>
+                <span *ngIf="selectedTour?.childFriendliness; else noData" class="stat-value">
+                    {{ getFriendlyLabel(selectedTour?.childFriendliness) }}
+                </span>
                 <span class="stat-label">CHILD-FRIENDLY</span>
             </div>
         </div>
+
+        <ng-template #noData>
+            <span class="no-data-placeholder">?</span>
+        </ng-template>
 
         <div class="logs-section">
             <div class="logs-controls">
                 <span class="section-label">TOUR LOGS</span>
                 <input type="text" placeholder="Search logs..." class="log-search">
-                <button class="btn-add-log">+ Add Log</button>
+                <button class="btn-add-log" (click)="openLogModal()">+ Add Log</button>
+                <app-log-modal 
+                    *ngIf="isLogModalOpen" 
+                    [tourId]="selectedTour?.id || 0" 
+                    (close)="closeLogModal()">
+                </app-log-modal>
             </div>
             
             <div class="logs-table">
@@ -67,9 +80,16 @@
         </span>
         <span class="col-rating">{{ log.rating }}/5 &#9733;</span>
         <div class="col-actions">
-            <button class="btn-icon">&#9998;</button>
-            <button class="btn-icon">&#10006;</button>
+            <button class="btn-icon" (click)="openEditLog(log)">&#9998;</button>
+            <button class="btn-icon" (click)="onDeleteLog(log.id)">&#10006;</button>
         </div>
+
+        <app-log-modal 
+            *ngIf="isLogModalOpen" 
+            [tourId]="selectedTour?.id || 0" 
+            [editLog]="selectedLogForEdit"
+            (close)="closeLogModal()">
+        </app-log-modal>
     </div>
 
     <div *ngIf="tourLogs.length === 0" class="table-row empty">

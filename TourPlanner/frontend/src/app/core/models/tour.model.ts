@@ -8,6 +8,6 @@ export interface Tour {
     distance: number;
     estimatedTime: number;
     routeImagePath: string;
-    popularity: number;
-    childFriendliness: number;
+    popularity: number | undefined;
+    childFriendliness: number | undefined;
 }

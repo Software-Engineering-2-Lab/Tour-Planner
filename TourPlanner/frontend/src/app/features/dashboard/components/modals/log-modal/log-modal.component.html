@@ -1,0 +1,74 @@
+<div class="modal-container">
+    <header class="modal-header">
+        <span>Add / Edit Tour Log</span>
+        <button class="close-x" (click)="onCancel()">&#10006;</button>
+    </header>
+
+    <div class="modal-table">
+        <div class="table-row">
+            <div class="label-cell">Date & Time</div>
+            <div class="input-cell">
+                <input type="datetime-local" [(ngModel)]="dateTime">
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="label-cell">Difficulty</div>
+            <div class="input-cell">
+                <div class="btn-group">
+                    <button [class.active]="difficulty === 'Easy'" (click)="setDifficulty('Easy')">Easy</button>
+                    <button [class.active]="difficulty === 'Medium'" (click)="setDifficulty('Medium')">Medium</button>
+                    <button [class.active]="difficulty === 'Hard'" (click)="setDifficulty('Hard')">Hard</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="label-cell">Total Distance</div>
+            <div class="input-cell">
+                <div class="input-with-unit">
+                    <input type="number" [(ngModel)]="totalDistance">
+                    <span class="unit">km</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="label-cell">Total Time</div>
+            <div class="input-cell">
+                <div class="input-with-unit">
+                    <input type="text" placeholder="hh:mm" [(ngModel)]="totalTime">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-row">
+            <div class="label-cell">Rating</div>
+            <div class="input-cell rating-stars">
+                <span *ngFor="let s of [1,2,3,4,5]" 
+                      (click)="setRating(s)" 
+                      [innerHTML]="s <= rating ? '&#9733;' : '&#9734;'">
+                </span>
+            </div>
+        </div>
+
+        <div class="table-row no-border">
+            <div class="label-cell">Commentary</div>
+            <div class="input-cell">
+                <textarea rows="3" [(ngModel)]="comment" placeholder="Write your impressions..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-strip">
+        PREVIEW: {{ dateTime | date:'dd.MM.yy' }} | {{ difficulty }} | {{ totalDistance }}km | {{ totalTime }}h | {{ rating }}/5 Stars
+    </div>
+
+    <footer class="modal-footer">
+        <div class="footer-label">Tour Logs</div>
+        <div class="footer-actions">
+            <button class="btn-outline" (click)="onCancel()">Cancel</button>
+            <button class="btn-save" (click)="onSave()">Save</button>
+        </div>
+    </footer>
+</div>

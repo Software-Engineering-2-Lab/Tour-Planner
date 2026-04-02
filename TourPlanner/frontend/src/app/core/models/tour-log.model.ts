@@ -3,7 +3,7 @@ export interface TourLog {
     tourId: number;
     dateTime: string;
     comment: string;
-    difficulty: number; 
+    difficulty: 'Easy' | 'Medium' | 'Hard';
     totalDistance: number;
     totalTime: number;
     rating: number; 
