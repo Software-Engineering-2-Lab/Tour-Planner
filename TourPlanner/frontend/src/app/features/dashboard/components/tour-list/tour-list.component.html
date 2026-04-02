@@ -19,6 +19,11 @@
     </nav>
 
     <footer class="sidebar-footer">
-        <button class="btn-add-tour">+ Add Tour</button>
+        <button class="btn-add-tour" (click)="openAddTour()">+ Add Tour</button>
+
+        <app-tour-modal 
+            *ngIf="isTourModalOpen" 
+            (close)="closeTourModal()">
+        </app-tour-modal>
     </footer>
 </div>

@@ -11,10 +11,16 @@
                 <span class="subtitle">{{ selectedTour.fromLocation }} ➔ {{ selectedTour.toLocation }}</span>
             </div>
             <div class="header-actions">
-                <button class="btn-edit">Edit</button>
-                <button class="btn-outline">Delete</button>
-                <button class="btn-outline">Export</button>
+                <button class="btn-icon" (click)="openEditTour()">&#9998; Edit</button>
+                <button class="btn-icon" (click)="onDeleteTour()">&#10006; Delete</button>
+                <button class="btn-icon">Export</button>
             </div>
+
+            <app-tour-modal 
+                *ngIf="isTourModalOpen" 
+                [editTour]="selectedTour!" 
+                (close)="isTourModalOpen = false">
+            </app-tour-modal>
         </header>
 
         <nav class="tabs-row">
@@ -86,7 +92,7 @@
 
         <app-log-modal 
             *ngIf="isLogModalOpen" 
-            [tourId]="selectedTour?.id || 0" 
+            [tourId]="selectedTour.id" 
             [editLog]="selectedLogForEdit"
             (close)="closeLogModal()">
         </app-log-modal>

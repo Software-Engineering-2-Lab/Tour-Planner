@@ -5,11 +5,12 @@ import { Tour } from '../../../../core/models/tour.model';
 import { TourLog } from '../../../../core/models/tour-log.model';
 import { MapComponent } from '../map/map.component';
 import { LogModalComponent } from '../modals/log-modal/log-modal.component';
+import { TourModalComponent } from '../modals/tour-modal/tour-modal.component';
 
 @Component({
     selector: 'app-tour-detail',
     standalone: true,
-    imports: [CommonModule, MapComponent, LogModalComponent],
+    imports: [CommonModule, MapComponent, LogModalComponent, TourModalComponent],
     templateUrl: './tour-detail.component.html',
     styleUrl: './tour-detail.component.scss'
 })
@@ -18,6 +19,7 @@ export class TourDetailComponent implements OnInit {
     tourLogs: TourLog[] = [];
     isLogModalOpen = false;
     selectedLogForEdit?: TourLog;
+    isTourModalOpen = false;
 
     constructor(private tourService: TourService) {}
 
@@ -59,6 +61,16 @@ export class TourDetailComponent implements OnInit {
             case 2: return 'MEDIUM';
             case 3: return 'HARD';
             default: return 'MEDIUM';
+        }
+    }
+
+    openEditTour(): void {
+        this.isTourModalOpen = true;
+    }
+
+    onDeleteTour(): void {
+        if (this.selectedTour && confirm('Stergi definitiv acest tur si toate log-urile sale?')) {
+            this.tourService.deleteTour(this.selectedTour.id);
         }
     }
 }

@@ -7,12 +7,6 @@ import { TourLog } from '../models/tour-log.model';
     providedIn: 'root'
 })
 export class TourService {
-    constructor() {
-        this.tours.forEach(tour => {
-            this.updateTourStats(tour.id);
-        });
-    }
-
     private tours: Tour[] = [
         { id: 1, name: 'Mountain Hike', description: 'Deep forest trail', fromLocation: 'Vienna', toLocation: 'Schneeberg', transportType: 'HIKE', distance: 12.5, estimatedTime: 4.5, routeImagePath: '', popularity: 5, childFriendliness: 2 },
         { id: 2, name: 'Danube Bike Route', description: 'Scenic river path', fromLocation: 'Linz', toLocation: 'Vienna', transportType: 'BIKE', distance: 180.0, estimatedTime: 12.0, routeImagePath: '', popularity: 4, childFriendliness: 5 }
@@ -23,8 +17,19 @@ export class TourService {
         { id: 102, tourId: 1, dateTime: '2026-03-20 09:30', comment: 'Foggy, path was slippery.', difficulty: 'Hard', totalDistance: 12.0, totalTime: 6.2, rating: 3 }
     ];
 
+    constructor() {
+        this.tours.forEach(tour => {
+            this.updateTourStats(tour.id);
+        });
+    }
+
+    private toursSubject = new BehaviorSubject<Tour[]>(this.tours);
+    tours$ = this.toursSubject.asObservable();
     private selectedTourSubject = new BehaviorSubject<Tour | null>(this.tours[0]);
     selectedTour$ = this.selectedTourSubject.asObservable();
+    
+
+
 
     getTours(): Tour[] {
         return this.tours;
@@ -85,6 +90,36 @@ export class TourService {
         if (index !== -1) {
             this.logs[index] = { ...updatedLog };
             this.updateTourStats(updatedLog.tourId);
+        }
+    }
+
+    deleteTour(tourId: number): void {
+        this.tours = this.tours.filter(t => t.id !== tourId);
+        this.logs = this.logs.filter(l => l.tourId !== tourId);
+
+        this.toursSubject.next([...this.tours]);
+
+        const current = this.selectedTourSubject.value;
+        if (current && current.id === tourId) {
+            this.selectedTourSubject.next(null);
+        }
+    }
+
+    addTour(newTour: Tour): void {
+        const nextId = this.tours.length > 0 ? Math.max(...this.tours.map(t => t.id)) + 1 : 1;
+        const tourWithId = { ...newTour, id: nextId };
+        this.tours.push(tourWithId);
+    
+        this.toursSubject.next([...this.tours]); 
+        this.selectTour(tourWithId);
+    }
+
+    updateTour(updatedTour: Tour): void {
+        const index = this.tours.findIndex(t => t.id === updatedTour.id);
+        if (index !== -1) {
+            this.tours[index] = { ...updatedTour };
+            this.toursSubject.next([...this.tours]); 
+            this.selectedTourSubject.next({ ...this.tours[index] });
         }
     }
 }
