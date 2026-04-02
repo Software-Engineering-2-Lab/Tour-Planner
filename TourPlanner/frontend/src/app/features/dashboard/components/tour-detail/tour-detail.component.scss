@@ -107,3 +107,70 @@
         line-height: 1.6;
     }
 }
+
+.logs-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0; 
+}
+
+.table-header, .table-row {
+    display: grid;
+    /* Ajustăm proporțiile: Date (100px), Comment (1fr), Stats (150px), Rating (80px), Actions (80px) */
+    grid-template-columns: 100px 1fr 160px 80px 80px;
+    padding: 10px 15px;
+    border: 2px solid #000;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-header {
+    background: #bdbdbd;
+    font-weight: bold;
+    border-bottom: none;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.table-row {
+    background: #fff;
+    margin-top: -2px;
+    font-size: 0.9rem;
+
+    .col-desc {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .col-stats {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-size: 0.8rem;
+
+        .badge {
+            background: #000;
+            color: #fff;
+            padding: 2px 6px;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+        
+        .val {
+            color: #555;
+            font-weight: 600;
+        }
+    }
+
+    .col-rating {
+        font-weight: bold;
+        color: #f39c12; // Un auriu discret pentru stele
+    }
+
+    .col-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+}
