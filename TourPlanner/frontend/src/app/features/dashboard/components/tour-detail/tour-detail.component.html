@@ -1,25 +1,70 @@
-<div class="map-island">
-    <app-map></app-map>
-</div>
+<div class="detail-container" *ngIf="selectedTour">
+    
+    <div class="map-island">
+        <app-map></app-map>
+    </div>
 
-<div class="tour-info-section">
-    <header class="tour-header">
-        <div class="title-group">
-            <h2>TourName</h2>
-            <small>Details</small>
-        </div>
-        <div class="action-buttons">
-            <button class="btn-edit">Edit</button>
-            <button>Delete</button>
-            <button>Export</button>
-        </div>
-    </header>
+    <div class="detail-content">
+        <header class="content-header">
+            <div class="title-info">
+                <h2>{{ selectedTour.name }}</h2>
+                <span class="subtitle">{{ selectedTour.fromLocation }} ➔ {{ selectedTour.toLocation }}</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn-edit">Edit</button>
+                <button class="btn-outline">Delete</button>
+                <button class="btn-outline">Export</button>
+            </div>
+        </header>
 
-    <nav class="tabs-row">
-        <button class="active">Details</button>
-        <button>Photos</button>
-    </nav>
+        <nav class="tabs-row">
+            <button class="tab-btn active">Details</button>
+            <button class="tab-btn">Photos</button>
+        </nav>
 
-    <div class="details-content">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-value">{{ selectedTour.distance }} km</span>
+                <span class="stat-label">DISTANCE</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ selectedTour.estimatedTime }} h</span>
+                <span class="stat-label">EST. TIME</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ selectedTour.popularity }}/5</span>
+                <span class="stat-label">POPULARITY</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">{{ selectedTour.childFriendliness }}/10</span>
+                <span class="stat-label">CHILD-FRIENDLY</span>
+            </div>
         </div>
+
+        <div class="logs-section">
+            <div class="logs-controls">
+                <span class="section-label">TOUR LOGS</span>
+                <input type="text" placeholder="Search logs..." class="log-search">
+                <button class="btn-add-log">+ Add Log</button>
+            </div>
+            
+            <div class="logs-table">
+                <div class="table-header">
+                    <span class="col-date">Date</span>
+                    <span class="col-desc">Description</span>
+                    <span class="col-actions">Actions</span>
+                </div>
+                <div class="table-row empty">
+                    <p>No logs available for this tour.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="description-area">
+            <label class="section-label">DESCRIPTION</label>
+            <div class="text-box">
+                {{ selectedTour.description }}
+            </div>
+        </div>
+    </div>
 </div>

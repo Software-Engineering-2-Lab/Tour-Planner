@@ -1,1 +1,24 @@
-<p>tour-list works!</p>
+<div class="sidebar-container">
+    <header class="sidebar-header">
+        <h3>MY TOURS ({{ tours.length }})</h3>
+    </header>
+
+    <div class="search-wrapper">
+        <input type="text" placeholder="Search tours...">
+    </div>
+
+    <nav class="tour-list-nav">
+        <ul class="tour-items">
+            <li *ngFor="let tour of tours" 
+                (click)="selectTour(tour)" 
+                [class.active]="tour.id === selectedTourId"
+                class="tour-item">
+                <span class="tour-name">{{ tour.name }}</span>
+            </li>
+        </ul>
+    </nav>
+
+    <footer class="sidebar-footer">
+        <button class="btn-add-tour">+ Add Tour</button>
+    </footer>
+</div>
