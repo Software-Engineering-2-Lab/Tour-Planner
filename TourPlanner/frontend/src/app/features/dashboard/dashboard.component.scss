@@ -1,0 +1,43 @@
+:host {
+    --bg-page: #a0a0a0;       
+    --bg-island: #d6d6d6;     
+    --bg-map: #e0e0e0;        
+    --border-main: 2px solid #000;
+    --border-dashed: 2px dashed #000;
+    --spacing: 15px;
+}
+
+.dashboard-viewport {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    padding: var(--spacing);
+    background-color: var(--bg-page);
+    gap: var(--spacing);
+    box-sizing: border-box;
+}
+
+.dashboard-body {
+    display: flex;
+    flex: 1;
+    gap: var(--spacing);
+    overflow: hidden;
+}
+
+.sidebar-island {
+    width: 250px;
+    background-color: var(--bg-island);
+    border: var(--border-main);
+    display: flex;
+    flex-direction: column;
+}
+
+.details-island {
+    flex: 1;
+    background-color: var(--bg-island);
+    border: var(--border-main);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}

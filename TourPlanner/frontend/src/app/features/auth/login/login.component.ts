@@ -78,7 +78,7 @@ export class LoginComponent {
             next: (response) => {
                 this.isLoading = false;
                 if (response?.token) this.authService.saveToken(response.token);
-                this.router.navigate(['/']);
+                this.router.navigate(['/dashboard']);
             },
             error: (error) => {
                 this.isLoading = false;
