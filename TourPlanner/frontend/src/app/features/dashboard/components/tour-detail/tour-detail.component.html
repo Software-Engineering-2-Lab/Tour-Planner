@@ -1,6 +1,6 @@
-<div class="detail-container" *ngIf="selectedTour">
+<div class="detail-container" *ngIf="selectedTour" [ngClass]="{'photos-mode': activeTab === 'photos'}">
     
-    <div class="map-island">
+    <div class="map-island" *ngIf="activeTab === 'details'">
         <app-map></app-map>
     </div>
 
@@ -24,70 +24,81 @@
         </header>
 
         <nav class="tabs-row">
-            <button class="tab-btn active">Details</button>
-            <button class="tab-btn">Photos</button>
+            <button class="tab-btn" [class.active]="activeTab === 'details'" (click)="setActiveTab('details')">Details</button>
+            <button class="tab-btn" [class.active]="activeTab === 'photos'" (click)="setActiveTab('photos')">Photos</button>
         </nav>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-value">{{ selectedTour.distance }} km</span>
-                <span class="stat-label">DISTANCE</span>
+        <div *ngIf="activeTab === 'details'">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value">{{ selectedTour.distance }} km</span>
+                    <span class="stat-label">DISTANCE</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ selectedTour.estimatedTime }} h</span>
+                    <span class="stat-label">EST. TIME</span>
+                </div>
+                <div class="stat-card">
+                    <span *ngIf="selectedTour?.popularity; else noData" class="stat-value">
+                        {{ selectedTour.popularity | number:'1.1-1' }}/5 &#9733;
+                    </span>
+                    <span class="stat-label">POPULARITY</span>
+                </div>
+                <div class="stat-card">
+                    <span *ngIf="selectedTour?.childFriendliness; else noData" class="stat-value">
+                        {{ getFriendlyLabel(selectedTour.childFriendliness) }}
+                    </span>
+                    <span class="stat-label">CHILD-FRIENDLY</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-value">{{ selectedTour.estimatedTime }} h</span>
-                <span class="stat-label">EST. TIME</span>
+
+            <div class="logs-section">
+                <div class="logs-controls">
+                    <span class="section-label">TOUR LOGS</span>
+                    <input type="text" placeholder="Search logs..." class="log-search">
+                    <button class="btn-add-log" (click)="openLogModal()">+ Add Log</button>
+                </div>
+                
+                <div class="logs-table">
+                    <div class="table-header">
+                        <span class="col-date">Date</span>
+                        <span class="col-desc">Comment</span>
+                        <span class="col-stats">Diff / Dist / Time</span>
+                        <span class="col-rating">Rating</span>
+                        <span class="col-actions">Actions</span>
+                    </div>
+
+                    <div *ngFor="let log of tourLogs" class="table-row">
+                        <span class="col-date">{{ log.dateTime | date:'dd.MM.yy' }}</span>
+                        <span class="col-desc" [title]="log.comment">{{ log.comment }}</span>
+                        <span class="col-stats">
+                            <span class="badge diff">{{ log.difficulty }}</span>
+                            <span class="val">{{ log.totalDistance }}km</span>
+                            <span class="val">{{ log.totalTime }}h</span>
+                        </span>
+                        <span class="col-rating">{{ log.rating }}/5 &#9733;</span>
+                        <div class="col-actions">
+                            <button class="btn-icon" (click)="openEditLog(log)">&#9998;</button>
+                            <button class="btn-icon" (click)="onDeleteLog(log.id)">&#10006;</button>
+                        </div>
+                    </div>
+
+                    <div *ngIf="tourLogs.length === 0" class="table-row empty">
+                        <p>No logs recorded for this tour.</p>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card">
-                <span *ngIf="selectedTour?.popularity; else noData" class="stat-value">
-                    {{ selectedTour?.popularity }}/5 &#9733;
-                </span>
-                <span class="stat-label">POPULARITY</span>
-            </div>
-            <div class="stat-card">
-                <span *ngIf="selectedTour?.childFriendliness; else noData" class="stat-value">
-                    {{ getFriendlyLabel(selectedTour?.childFriendliness) }}
-                </span>
-                <span class="stat-label">CHILD-FRIENDLY</span>
+
+            <div class="description-area">
+                <label class="section-label">DESCRIPTION</label>
+                <div class="text-box">
+                    {{ selectedTour.description }}
+                </div>
             </div>
         </div>
 
-        <ng-template #noData>
-            <span class="no-data-placeholder">?</span>
-        </ng-template>
-
-        <div class="logs-section">
-            <div class="logs-controls">
-                <span class="section-label">TOUR LOGS</span>
-                <input type="text" placeholder="Search logs..." class="log-search">
-                <button class="btn-add-log" (click)="openLogModal()">+ Add Log</button>
-                <app-log-modal 
-                    *ngIf="isLogModalOpen" 
-                    [tourId]="selectedTour?.id || 0" 
-                    (close)="closeLogModal()">
-                </app-log-modal>
-            </div>
-            
-            <div class="logs-table">
-    <div class="table-header">
-        <span class="col-date">Date</span>
-        <span class="col-desc">Comment</span>
-        <span class="col-stats">Diff / Dist / Time</span>
-        <span class="col-rating">Rating</span>
-        <span class="col-actions">Actions</span>
-    </div>
-
-    <div *ngFor="let log of tourLogs" class="table-row">
-        <span class="col-date">{{ log.dateTime | date:'dd.MM.yy' }}</span>
-        <span class="col-desc" [title]="log.comment">{{ log.comment }}</span>
-        <span class="col-stats">
-            <span class="badge diff">{{ log.difficulty }}</span>
-            <span class="val">{{ log.totalDistance }}km</span>
-            <span class="val">{{ log.totalTime }}h</span>
-        </span>
-        <span class="col-rating">{{ log.rating }}/5 &#9733;</span>
-        <div class="col-actions">
-            <button class="btn-icon" (click)="openEditLog(log)">&#9998;</button>
-            <button class="btn-icon" (click)="onDeleteLog(log.id)">&#10006;</button>
+        <div *ngIf="activeTab === 'photos'">
+            <app-tour-photos [tourId]="selectedTour.id"></app-tour-photos>
         </div>
 
         <app-log-modal 
@@ -96,19 +107,9 @@
             [editLog]="selectedLogForEdit"
             (close)="closeLogModal()">
         </app-log-modal>
-    </div>
 
-    <div *ngIf="tourLogs.length === 0" class="table-row empty">
-        <p>No logs recorded for this tour.</p>
-    </div>
-</div>
-        </div>
-
-        <div class="description-area">
-            <label class="section-label">DESCRIPTION</label>
-            <div class="text-box">
-                {{ selectedTour.description }}
-            </div>
-        </div>
+        <ng-template #noData>
+            <span class="no-data-placeholder">?</span>
+        </ng-template>
     </div>
 </div>

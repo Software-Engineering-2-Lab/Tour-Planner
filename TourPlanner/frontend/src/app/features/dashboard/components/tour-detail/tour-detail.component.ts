@@ -6,11 +6,14 @@ import { TourLog } from '../../../../core/models/tour-log.model';
 import { MapComponent } from '../map/map.component';
 import { LogModalComponent } from '../modals/log-modal/log-modal.component';
 import { TourModalComponent } from '../modals/tour-modal/tour-modal.component';
+import { TourPhotosComponent } from '../tour-photos/tour-photos.component';
+
+type TourTab = 'details' | 'photos';
 
 @Component({
     selector: 'app-tour-detail',
     standalone: true,
-    imports: [CommonModule, MapComponent, LogModalComponent, TourModalComponent],
+    imports: [CommonModule, MapComponent, LogModalComponent, TourModalComponent, TourPhotosComponent],
     templateUrl: './tour-detail.component.html',
     styleUrl: './tour-detail.component.scss'
 })
@@ -20,12 +23,19 @@ export class TourDetailComponent implements OnInit {
     isLogModalOpen = false;
     selectedLogForEdit?: TourLog;
     isTourModalOpen = false;
+    activeTab: TourTab = 'details';
+
+    setActiveTab(tab: TourTab): void {
+        this.activeTab = tab;
+    }
+    
 
     constructor(private tourService: TourService) {}
 
     ngOnInit(): void {
         this.tourService.selectedTour$.subscribe(tour => {
             this.selectedTour = tour;
+            this.activeTab = 'details';
             if (tour) {
                 this.tourLogs = this.tourService.getLogsForTour(tour.id);
             }

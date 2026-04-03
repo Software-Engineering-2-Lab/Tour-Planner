@@ -63,6 +63,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 15px;
+    margin-bottom: 15px;
 }
 
 .stat-card {
@@ -112,11 +113,11 @@
     display: flex;
     flex-direction: column;
     gap: 0; 
+    margin-bottom: 10px;
 }
 
 .table-header, .table-row {
     display: grid;
-    /* Ajustăm proporțiile: Date (100px), Comment (1fr), Stats (150px), Rating (80px), Actions (80px) */
     grid-template-columns: 100px 1fr 160px 80px 80px;
     padding: 10px 15px;
     border: 2px solid #000;
@@ -165,7 +166,7 @@
 
     .col-rating {
         font-weight: bold;
-        color: #f39c12; // Un auriu discret pentru stele
+        color: #f39c12; 
     }
 
     .col-actions {
