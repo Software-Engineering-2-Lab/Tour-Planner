@@ -1,17 +1,19 @@
 <div class="sidebar-container">
     <header class="sidebar-header">
-        <h3>MY TOURS ({{ tours.length }})</h3>
+        <h3>MY TOURS ({{ filteredTours().length }})</h3>
     </header>
 
     <div class="search-wrapper">
-        <input type="text" placeholder="Search tours...">
+        <input type="text" 
+               placeholder="Search tours..." 
+               (input)="onSearchChange($event)">
     </div>
 
     <nav class="tour-list-nav">
         <ul class="tour-items">
-            <li *ngFor="let tour of tours" 
+            <li *ngFor="let tour of filteredTours()" 
                 (click)="selectTour(tour)" 
-                [class.active]="tour.id === selectedTourId"
+                [class.active]="tour.id === selectedTour()?.id"
                 class="tour-item">
                 <span class="tour-name">{{ tour.name }}</span>
             </li>
@@ -22,7 +24,7 @@
         <button class="btn-add-tour" (click)="openAddTour()">+ Add Tour</button>
 
         <app-tour-modal 
-            *ngIf="isTourModalOpen" 
+            *ngIf="isTourModalOpen()" 
             (close)="closeTourModal()">
         </app-tour-modal>
     </footer>

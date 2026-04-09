@@ -1,5 +1,5 @@
-# Build: Node.js 22 Alpine image
-FROM node:22-alpine
+# Build: Node.js 24 Alpine image
+FROM node:24-alpine
 WORKDIR /app
 
 # Copy configuration files and install dependencies
