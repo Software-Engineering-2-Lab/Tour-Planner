@@ -18,7 +18,7 @@ export class LogModalComponent {
     @Output() close = new EventEmitter<void>();
 
     dateTime: string = new Date().toISOString().slice(0, 16);
-    difficulty: string = 'Medium';
+    difficulty: number = 5;
     totalDistance: number = 0;
     totalTime: number = 0;
     rating: number = 3;
@@ -39,27 +39,36 @@ export class LogModalComponent {
 
 	onSave(): void {
     	const logData: TourLog = {
-        	id: this.editLog ? this.editLog.id : 0,
+        	id: this.editLog ? this.editLog.id : null,
         	tourId: this.tourId,
-        	dateTime: this.dateTime,
+        	dateTime: new Date(this.dateTime).toISOString().split('.')[0],
         	comment: this.comment,
-        	difficulty: this.difficulty as 'Easy' | 'Medium' | 'Hard',
-        	totalDistance: this.totalDistance,
-        	totalTime: this.totalTime,
-        	rating: this.rating
+        	difficulty: this.difficulty,
+        	totalDistance: Number(this.totalDistance),
+        	totalTime: Number(this.totalTime),
+        	rating: Number(this.rating)
     	};
 
     	if (this.editLog) {
-        	this.tourService.updateLog(logData);
+        	this.tourService.updateLog(logData).subscribe(() => {
+            	this.close.emit();
+        	});
     	} else {
-        	this.tourService.addLog(logData);
+        	this.tourService.addLog(logData).subscribe(() => {
+            	this.close.emit();
+        	});
     	}
-    	this.close.emit();
 	}
 
-    setDifficulty(val: string): void {
+    setDifficulty(val: number): void {
         this.difficulty = val;
     }
+
+	getDifficultyLabel(val: number): string {
+    	if (val >= 8) return 'HARD (' + val + ')';
+    	if (val >= 5) return 'MEDIUM (' + val + ')';
+    	return 'EASY (' + val + ')';
+	}
 
     setRating(val: number): void {
         this.rating = val;

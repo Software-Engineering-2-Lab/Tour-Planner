@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TourService } from '../../../../../core/services/tour.service';
-import { Tour } from '../../../../../core/models/tour.model';
+import { Tour, CreateTourDto } from '../../../../../core/models/tour.model';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
     selector: 'app-tour-modal',
@@ -14,6 +15,8 @@ import { Tour } from '../../../../../core/models/tour.model';
 export class TourModalComponent implements OnInit {
     @Input() editTour?: Tour;
     @Output() close = new EventEmitter<void>();
+
+    private authService = inject(AuthService);
 
     name: string = '';
     description: string = '';
@@ -29,27 +32,46 @@ export class TourModalComponent implements OnInit {
     }
 
     onSave(): void {
-        const tourData: Tour = {
-            id: this.editTour ? this.editTour.id : 0,
-            name: this.name,
-            description: this.description,
-            fromLocation: this.fromLocation,
-            toLocation: this.toLocation,
-            transportType: this.transportType,
-            distance: this.distance,
-            estimatedTime: this.estimatedTime,
-            routeImagePath: this.editTour?.routeImagePath || '',
-            popularity: this.editTour?.popularity,
-            childFriendliness: this.editTour?.childFriendliness
-        };
+        const currentUserId = this.authService.getUserId();
 
-    if (this.editTour) {
-        this.tourService.updateTour(tourData);
-    } else {
-        this.tourService.addTour(tourData);
+        if (currentUserId === 0) {
+            alert("Session expired. Please log in again.");
+            return;
+        }
+        if (!this.name || !this.fromLocation || !this.toLocation) {
+            alert("Please fill in the required fields!");
+            return;
+        }
+        if (this.editTour) {
+            const updatedData: Tour = {
+                ...this.editTour,
+                name: this.name,
+                description: this.description,
+                fromLocation: this.fromLocation,
+                toLocation: this.toLocation,
+                transportType: this.transportType,
+                distance: this.distance,
+                estimatedTime: this.estimatedTime
+            };
+            this.tourService.updateTour(updatedData);
+        } else {
+            const newTour = {
+                name: this.name,
+                description: this.description,
+                fromLocation: this.fromLocation,
+                toLocation: this.toLocation,
+                transportType: this.transportType,
+                distance: Number(this.distance),
+                estimatedTime: Number(this.estimatedTime),
+                routeImagePath: 'default.png',
+                popularity: 0,
+                childFriendliness: 0,
+                userId: Number(localStorage.getItem('userId'))
+            }
+            this.tourService.addTour(newTour);
+        }
+        this.close.emit();
     }
-    this.close.emit();
-};
 
     constructor(private tourService: TourService) {}
 

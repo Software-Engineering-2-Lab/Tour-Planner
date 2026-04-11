@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name="date_time",nullable = false)
     LocalDateTime dateTime = LocalDateTime.now();
@@ -25,16 +25,16 @@ public class Log {
     private String comment;
 
     @Column(name = "difficulty", nullable = false)
-    private int difficulty;
+    private Integer difficulty;
 
     @Column(name = "total_distance", nullable = false)
-    private double totalDistance;
+    private Double totalDistance;
 
     @Column(name = "total_time", nullable = false)
-    private double totalTime;
+    private Double totalTime;
 
     @Column(name = "rating", nullable = false)
-    private int rating;
+    private Integer rating;
 
     @ManyToOne
     @JoinColumn(name = "tour_id")

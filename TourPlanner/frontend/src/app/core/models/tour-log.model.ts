@@ -1,9 +1,9 @@
 export interface TourLog {
-    id: number;
+    id: number | null;
     tourId: number;
     dateTime: string;
     comment: string;
-    difficulty: 'Easy' | 'Medium' | 'Hard';
+    difficulty: number; 
     totalDistance: number;
     totalTime: number;
     rating: number; 

@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RouteResponseDTO {
 
-    private double distance;
-    private double estimatedtime;
+    private Double distance;
+    private Double estimatedTime;
     private String mapImageUrl;
     private String geometryJson;
     //o sa fie mai multe campuri

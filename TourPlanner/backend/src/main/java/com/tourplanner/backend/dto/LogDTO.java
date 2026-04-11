@@ -7,20 +7,20 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogDTO {
-
-    private long id;
+    private Long id;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dateTime;
     private String comment;
-    private int difficulty;
-    private int totalDistance;
-    private int totalTime;
-    private int rating;
-    private long tourId;
-
-
+    private Integer difficulty;
+    private Double totalDistance;
+    private Double totalTime;
+    private Integer rating;
+    private Long tourId;
 }

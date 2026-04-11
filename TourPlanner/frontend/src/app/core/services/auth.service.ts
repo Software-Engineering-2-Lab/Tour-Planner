@@ -29,4 +29,9 @@ export class AuthService {
     logout(): void {
         localStorage.removeItem('jwt_token');
     }
+
+    getUserId(): number {
+        const id = localStorage.getItem('userId');
+        return id ? parseInt(id, 10) : 0;
+    }
 }

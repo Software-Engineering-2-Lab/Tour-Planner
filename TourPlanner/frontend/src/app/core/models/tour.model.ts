@@ -8,6 +8,13 @@ export interface Tour {
     distance: number;
     estimatedTime: number;
     routeImagePath: string;
-    popularity: number | undefined;
-    childFriendliness: number | undefined;
+    popularity: number;
+    childFriendliness: number;
+    userId: number;
+}
+
+export interface CreateTourDto extends Omit<Tour, 'id' | 'popularity' | 'childFriendliness'> {
+    popularity: number;
+    childFriendliness: number;
+    userId: number;
 }

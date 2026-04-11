@@ -1,5 +1,6 @@
-import { Component, signal, computed, effect, inject } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
 import { TourService } from '../../../../core/services/tour.service';
 import { TourLog } from '../../../../core/models/tour-log.model';
 import { MapComponent } from '../map/map.component';
@@ -18,15 +19,18 @@ type TourTab = 'details' | 'photos';
 })
 export class TourDetailComponent {
     private tourService = inject(TourService);
+    private dialog = inject(MatDialog);
 
     activeTab = signal<TourTab>('details');
+    searchTerm = signal('');
+    
+    // Label: Signals required by the HTML template for modal visibility
     isLogModalOpen = signal(false);
     isTourModalOpen = signal(false);
     selectedLogForEdit = signal<TourLog | undefined>(undefined);
-    searchTerm = signal('');
 
     selectedTour = this.tourService.selectedTour;
-    
+
     filteredLogs = computed(() => {
         const term = this.searchTerm().toLowerCase();
         const logs = this.tourService.selectedTourLogs();
@@ -35,57 +39,22 @@ export class TourDetailComponent {
 
         return logs.filter(log => {
             const commentMatch = log.comment.toLowerCase().includes(term);
-            const diffMatch = log.difficulty.toLowerCase().includes(term);
-
-            // Convert log date to visual format dd.mm.yyyy
             const dateObj = new Date(log.dateTime);
-            const day = String(dateObj.getDate()).padStart(2, '0');
-            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-            const year = String(dateObj.getFullYear()).slice(-2);
-            const visualDate = `${day}.${month}.${year}`;
-
-            const dateMatch = visualDate.includes(term) || log.dateTime.includes(term);
-
-            return commentMatch || diffMatch || dateMatch;
+            const visualDate = `${String(dateObj.getDate()).padStart(2, '0')}.${String(dateObj.getMonth() + 1).padStart(2, '0')}.${String(dateObj.getFullYear()).slice(-2)}`;
+            
+            return commentMatch || visualDate.includes(term) || log.dateTime.includes(term);
         });
     });
 
-    constructor() {
-        effect(() => {
-            this.selectedTour();
-            this.activeTab.set('details');
-        }, { allowSignalWrites: true });
-    }
-
-    setActiveTab(tab: TourTab): void {
-        this.activeTab.set(tab);
-    }
-
-    onSearchChange(event: Event): void {
-        this.searchTerm.set((event.target as HTMLInputElement).value);
-    }
-
-    openLogModal(): void {
-        this.isLogModalOpen.set(true);
-    }
-
-    openEditLog(log: TourLog): void {
-        this.selectedLogForEdit.set(log);
-        this.isLogModalOpen.set(true);
-    }
-
-    closeLogModal(): void {
-        this.isLogModalOpen.set(false);
-        this.selectedLogForEdit.set(undefined);
-    }
-
-    onDeleteLog(logId: number): void {
+    // Label: Refresh logs from backend for the currently selected tour
+    loadLogs(): void {
         const tour = this.selectedTour();
-        if (tour && confirm('Are you sure you want to delete this log?')) {
-            this.tourService.deleteLog(logId, tour.id);
+        if (tour) {
+            this.tourService.loadLogsForTour(tour.id);
         }
     }
 
+    // Label: Handlers for Tour CRUD operations requested by the template
     openEditTour(): void {
         this.isTourModalOpen.set(true);
     }
@@ -97,9 +66,42 @@ export class TourDetailComponent {
         }
     }
 
+    // Label: Handlers for Log modal operations
+    openLogModal(): void {
+        this.selectedLogForEdit.set(undefined);
+        this.isLogModalOpen.set(true);
+    }
+
+    openEditLog(log: TourLog): void {
+        this.selectedLogForEdit.set(log);
+        this.isLogModalOpen.set(true);
+    }
+
+    closeLogModal(): void {
+        this.isLogModalOpen.set(false);
+        this.selectedLogForEdit.set(undefined);
+        this.loadLogs();
+    }
+
+    onDeleteLog(logId: number): void {
+        const tour = this.selectedTour();
+        if (tour && confirm('Are you sure you want to delete this log?')) {
+            this.tourService.deleteLog(logId, tour.id);
+        }
+    }
+
+    setActiveTab(tab: TourTab): void {
+        this.activeTab.set(tab);
+    }
+
+    onSearchChange(event: Event): void {
+        this.searchTerm.set((event.target as HTMLInputElement).value);
+    }
+
     getFriendlyLabel(value: number | undefined): string {
-        if (value === undefined) return '?';
-        const labels: Record<number, string> = { 1: 'EASY', 2: 'MEDIUM', 3: 'HARD' };
-        return labels[value] || 'MEDIUM';
+        if (value === undefined) return 'MEDIUM';
+        if (value >= 8) return 'HARD';
+        if (value >= 5) return 'MEDIUM';
+        return 'EASY';
     }
 }

@@ -18,12 +18,12 @@ import java.util.List;
 public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "description", nullable = false, length = 50)
+    @Column(name = "description", nullable = true, length = 50)
     private String description;
 
     @Column(name = "from_location", nullable = false, length = 50)
@@ -34,22 +34,22 @@ public class Tour {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transport_type", nullable = false, length = 20)
-    private TransportType type;
+    private TransportType transportType;
 
-    @Column(name = "distance", nullable = false)
-    private double distance;
+    @Column(name = "distance", nullable = true)
+    private Double distance;
 
-    @Column(name = "estimated_time", nullable = false)
-    private double estimatedTime;
+    @Column(name = "estimated_time", nullable = true)
+    private Double estimatedTime;
 
-    @Column(name = "route_image_path")
+    @Column(name = "route_image_path", nullable = true)
     private String routeImagePath;
 
-    @Column(name = "popularity", nullable = false)
-    private int popularity;
+    @Column(name = "popularity", nullable = true)
+    private Integer popularity;
 
-    @Column(name = "child_friendliness", nullable = false)
-    private double childFriendliness;
+    @Column(name = "child_friendliness", nullable = true)
+    private Double childFriendliness;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

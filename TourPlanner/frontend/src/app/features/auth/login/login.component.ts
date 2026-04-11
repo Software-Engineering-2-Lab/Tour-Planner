@@ -77,7 +77,10 @@ export class LoginComponent {
         this.authService.login(this.loginForm.value).subscribe({
             next: (response) => {
                 this.isLoading = false;
-                if (response?.token) this.authService.saveToken(response.token);
+                if (response?.token){
+                    this.authService.saveToken(response.token);
+                    localStorage.setItem('userId', response.userId.toString());
+                }
                 this.router.navigate(['/dashboard']);
             },
             error: (error) => {
@@ -92,17 +95,17 @@ export class LoginComponent {
     }
 
     onRegisterSubmit() {
-        if (this.isLoading) return;
-        this.registerSubmitFailed = false;
-        this.serverErrorMessage = '';
-
-        if (this.registerForm.invalid) {
+        if (this.isLoading || this.registerForm.invalid) {
             this.registerSubmitFailed = true;
             return;
         }
 
         this.isLoading = true;
-        this.authService.register(this.registerForm.value).subscribe({
+    
+        const { username, email, password } = this.registerForm.value;
+        const cleanUserData = { username, email, password };
+
+        this.authService.register(cleanUserData).subscribe({
             next: () => {
                 this.isLoading = false;
                 this.registerForm.reset();

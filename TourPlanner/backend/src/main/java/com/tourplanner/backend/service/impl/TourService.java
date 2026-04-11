@@ -17,28 +17,27 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TourService implements ITourService {
 
-     private final TourRepository tourRepository;
+    private final TourRepository tourRepository;
 
-     @Override
+    @Override
     @Transactional
-    public TourDTO create(TourDTO dto){
+    public TourDTO create(TourDTO dto) {
+        Tour tour = new Tour();
+        tour.setName(dto.getName());
+        tour.setDescription(dto.getDescription());
+        tour.setFromLocation(dto.getFromLocation());
+        tour.setToLocation(dto.getToLocation());
+        tour.setTransportType(dto.getTransportType());
+        tour.setDistance(dto.getDistance());
+        tour.setEstimatedTime(dto.getEstimatedTime());
+        tour.setRouteImagePath(dto.getRouteImagePath()); // Adaugat
 
-         Tour tour = new Tour();
-         tour.setName(dto.getName());
-         tour.setDescription(dto.getDescription());
-         tour.setFromLocation(dto.getFromLocation());
-         tour.setToLocation(dto.getToLocation());
-         tour.setType(dto.getTransportType());
-         tour.setDistance(dto.getDistance());
-         tour.setEstimatedTime(dto.getEstimatedTime());
+        tour.setPopularity(0);
+        tour.setChildFriendliness(0.0); 
 
-         tour.setPopularity(0);
-         tour.setChildFriendliness(calculateChildFriendliness());
-
-         Tour savedTour = tourRepository.save(tour);
-
-         return mapToDTO(savedTour);
-     }
+        Tour savedTour = tourRepository.save(tour);
+        return mapToDTO(savedTour);
+    }
 
     @Override
     @Transactional
@@ -51,7 +50,7 @@ public class TourService implements ITourService {
         existingTour.setDescription(dto.getDescription());
         existingTour.setFromLocation(dto.getFromLocation());
         existingTour.setToLocation(dto.getToLocation());
-        existingTour.setType(dto.getTransportType());
+        existingTour.setTransportType(dto.getTransportType());
         existingTour.setDistance(dto.getDistance());
         existingTour.setEstimatedTime(dto.getEstimatedTime());
 
@@ -107,11 +106,12 @@ public class TourService implements ITourService {
     private TourDTO mapToDTO(Tour tour){
 
          TourDTO dto = new TourDTO();
+         dto.setId(tour.getId());
          dto.setName(tour.getName());
          dto.setDescription(tour.getDescription());
          dto.setFromLocation(tour.getFromLocation());
          dto.setToLocation(tour.getToLocation());
-         dto.setTransportType(tour.getType());
+         dto.setTransportType(tour.getTransportType());
          dto.setDistance(tour.getDistance());
          dto.setEstimatedTime(tour.getEstimatedTime());
          dto.setChildFriendliness(tour.getChildFriendliness());

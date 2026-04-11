@@ -12,14 +12,21 @@
             </div>
         </div>
 
-        <div class="table-row">
-            <div class="label-cell">Difficulty</div>
+        <div class="table-row difficulty-row">
+            <div class="label-cell">
+                Difficulty:
+            </div>
             <div class="input-cell">
-                <div class="btn-group">
-                    <button [class.active]="difficulty === 'Easy'" (click)="setDifficulty('Easy')">Easy</button>
-                    <button [class.active]="difficulty === 'Medium'" (click)="setDifficulty('Medium')">Medium</button>
-                    <button [class.active]="difficulty === 'Hard'" (click)="setDifficulty('Hard')">Hard</button>
-                </div>
+                <span class="difficulty-text">{{ getDifficultyLabel(difficulty) }}</span> 
+                <input 
+                type="range" 
+                min="1" 
+                max="10" 
+                step="1"
+                [(ngModel)]="difficulty" 
+                name="difficulty"
+                class="difficulty-slider"
+                >
             </div>
         </div>
 

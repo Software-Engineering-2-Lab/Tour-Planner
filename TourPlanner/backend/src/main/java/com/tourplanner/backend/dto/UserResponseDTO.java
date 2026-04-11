@@ -12,9 +12,7 @@ import lombok.Builder;
 @AllArgsConstructor
 
 public class UserResponseDTO {
-
     private String username;
     private String email;
     private String password;
-
 }
