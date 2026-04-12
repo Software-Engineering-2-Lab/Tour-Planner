@@ -4,6 +4,7 @@ import com.tourplanner.backend.dto.SearchResultDTO;
 import com.tourplanner.backend.dto.TourDTO;
 import com.tourplanner.backend.entity.Tour;
 import com.tourplanner.backend.repository.TourRepository;
+import com.tourplanner.backend.repository.UserRepository;
 import com.tourplanner.backend.service.ITourService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TourService implements ITourService {
-
     private final TourRepository tourRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -30,10 +31,14 @@ public class TourService implements ITourService {
         tour.setTransportType(dto.getTransportType());
         tour.setDistance(dto.getDistance());
         tour.setEstimatedTime(dto.getEstimatedTime());
-        tour.setRouteImagePath(dto.getRouteImagePath()); // Adaugat
+        tour.setRouteImagePath(dto.getRouteImagePath());
 
         tour.setPopularity(0);
         tour.setChildFriendliness(0.0); 
+
+        if (dto.getUserId() != null) {
+            userRepository.findById(dto.getUserId()).ifPresent(tour::setUser);
+        }
 
         Tour savedTour = tourRepository.save(tour);
         return mapToDTO(savedTour);
@@ -69,15 +74,6 @@ public class TourService implements ITourService {
             throw new RuntimeException("Tour not found with id "+id);
         }
         tourRepository.deleteById(id);
-    }
-
-    @Override
-    public List<TourDTO> findAll(){
-         List<Tour> tours = tourRepository.findAll();
-
-         return tours.stream()
-                 .map(this::mapToDTO)
-                 .collect(Collectors.toList());
     }
 
     @Override
@@ -125,5 +121,13 @@ public class TourService implements ITourService {
 
         return score;
 
+    }
+
+    @Override
+    public List<TourDTO> findByUserId(Long userId) {
+        return tourRepository.findByUserId(userId)
+            .stream()
+            .map(this::mapToDTO)
+            .collect(Collectors.toList());
     }
 }

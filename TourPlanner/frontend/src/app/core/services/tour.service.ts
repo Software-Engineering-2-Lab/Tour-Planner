@@ -22,17 +22,29 @@ export class TourService {
         this.loadTours();
     }
 
-    // Label: Fetch all tours and automatically select the first one if available
     loadTours(): void {
-        this.http.get<Tour[]>(`${this.API_URL}/tours`).subscribe(data => {
-            this.tours.set(data);
-            if (data.length > 0 && !this.selectedTour()) {
-                this.selectTour(data[0]);
+        const userId = localStorage.getItem('userId');
+    
+        if (!userId) {
+            this.tours.set([]);
+            return;
+        }
+
+        this.http.get<Tour[]>(`${this.API_URL}/tours/user/${userId}`).subscribe({
+            next: (data) => {
+                this.tours.set(data);
+                if (data.length > 0 && !this.selectedTour()) {
+                    this.selectTour(data[0]);
+                }
+            },
+            error: (err) => {
+                console.error('Failed to load tours. The global endpoint is now disabled.', err);
+                this.tours.set([]);
             }
         });
     }
 
-    // Label: Update the currently selected tour and trigger log loading
+    // Update the currently selected tour and trigger log loading
     selectTour(tour: Tour | null): void {
         this.selectedTour.set(tour);
         if (tour) {
@@ -42,18 +54,24 @@ export class TourService {
         }
     }
 
-    // Label: Send a POST request to create a tour and refresh the list
+    //  Injecting userId into the payload before sending it to the server
     addTour(tourData: CreateTourDto): void {
-        this.http.post<Tour>(`${this.API_URL}/tours`, tourData).subscribe({
+        const userId = localStorage.getItem('userId');
+        const payload = { 
+            ...tourData, 
+            userId: userId ? Number(userId) : null 
+        };
+
+        this.http.post<Tour>(`${this.API_URL}/tours`, payload).subscribe({
             next: (savedTour) => {
                 this.tours.update(current => [...current, savedTour]);
                 this.selectTour(savedTour);
             },
-            error: (err) => console.error('Eroare la salvare tur:', err)
+            error: (err) => console.error('Error creating tour:', err)
         });
     }
 
-    // Label: Update tour details and sync the selected tour signal
+    // Update tour details and sync the selected tour signal
     updateTour(updatedTour: Tour): void {
         this.http.put<Tour>(`${this.API_URL}/tours/${updatedTour.id}`, updatedTour).subscribe(res => {
             this.tours.update(current => current.map(t => t.id === res.id ? res : t));
@@ -63,7 +81,7 @@ export class TourService {
         });
     }
 
-    // Label: Permanently delete a tour and clear associated signals
+    // Permanently delete a tour and clear associated signals
     deleteTour(tourId: number): void {
         this.http.delete(`${this.API_URL}/tours/${tourId}`).subscribe(() => {
             this.tours.update(current => current.filter(t => t.id !== tourId));
@@ -74,27 +92,37 @@ export class TourService {
         });
     }
 
-    // Label: Retrieve all logs for a specific tour from the backend
+    // Retrieve all logs for a specific tour from the backend
     loadLogsForTour(tourId: number): void {
         this.http.get<TourLog[]>(`${this.API_URL}/tours/${tourId}/logs`).subscribe(data => {
             this.logs.set(data);
         });
     }
 
-    // Label: Add a new log and return the observable for component subscription
+    // Add a new log and return the observable for component subscription
     addLog(log: TourLog): Observable<TourLog> {
         return this.http.post<TourLog>(`${this.API_URL}/tours/${log.tourId}/logs`, log);
     }
 
-    // Label: Update an existing log and return the observable for component subscription
+    // Update an existing log and return the observable for component subscription
     updateLog(updatedLog: TourLog): Observable<TourLog> {
         return this.http.put<TourLog>(`${this.API_URL}/tours/${updatedLog.tourId}/logs/${updatedLog.id}`, updatedLog);
     }
 
-    // Label: Delete a specific log via the hierarchical tour-based route
+    // Delete a specific log via the hierarchical tour-based route
     deleteLog(logId: number, tourId: number): void {
         this.http.delete(`${this.API_URL}/tours/${tourId}/logs/${logId}`).subscribe(() => {
             this.logs.update(current => current.filter(l => l.id !== logId));
         });
+    }
+
+    getToursByUserId(userId: number): Observable<Tour[]> {
+        return this.http.get<Tour[]>(`${this.API_URL}/user/${userId}`);
+    }
+
+    clearData(): void {
+        this.tours.set([]);
+        this.selectedTour.set(null);
+        this.logs.set([]);
     }
 }

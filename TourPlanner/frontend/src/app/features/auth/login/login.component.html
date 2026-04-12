@@ -40,9 +40,8 @@
                     </button>
                 </div>
             </div>
-            <div class="error-container" *ngIf="loginSubmitFailed">
-                <span class="error-message" *ngIf="loginForm.get('email')?.invalid">Please enter a valid email address</span>
-                <span class="error-message" *ngIf="loginForm.get('email')?.valid && serverErrorMessage">{{ serverErrorMessage }}</span>
+            <div class="error-container" *ngIf="loginSubmitFailed && serverErrorMessage">
+                <span class="error-message">{{ serverErrorMessage }}</span>
             </div>
             <button type="submit" class="submit-btn" [disabled]="isLoading">Login</button>
             <a href="#" class="forgot-link" *ngIf="showForgotPassword">Forgot password?</a>

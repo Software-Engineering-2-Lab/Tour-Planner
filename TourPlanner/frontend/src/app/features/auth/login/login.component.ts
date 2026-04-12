@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { TourService } from '../../../core/services/tour.service';
 
 @Component({
     selector: 'app-login',
@@ -26,10 +27,12 @@ export class LoginComponent {
 
     private authService = inject(AuthService);
     private router = inject(Router);
+    private cdr = inject(ChangeDetectorRef);
+    private tourService = inject(TourService);
 
     loginForm = new FormGroup({
-        email: new FormControl('', [Validators.required, Validators.email]),
-        password: new FormControl('', [Validators.required, Validators.minLength(8)])
+        email: new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required])
     });
 
     registerForm = new FormGroup({
@@ -77,19 +80,29 @@ export class LoginComponent {
         this.authService.login(this.loginForm.value).subscribe({
             next: (response) => {
                 this.isLoading = false;
-                if (response?.token){
+                if (response && response.token && response.userId) {
                     this.authService.saveToken(response.token);
                     localStorage.setItem('userId', response.userId.toString());
+                    this.tourService.loadTours();
+                    setTimeout(() => {
+                        this.router.navigate(['/dashboard']);
+                    }, 50);
+                } else {
+                    this.serverErrorMessage = 'Invalid login attempt.';
+                    this.loginSubmitFailed = true;
                 }
-                this.router.navigate(['/dashboard']);
+                this.cdr.detectChanges();
             },
-            error: (error) => {
+            error: (err: any) => {
                 this.isLoading = false;
                 this.loginSubmitFailed = true;
-                this.serverErrorMessage = error.error?.message || 'Email or password are invalid';
+                
+                this.serverErrorMessage = err?.error?.message || 'Invalid email or password';
+
                 if (this.serverErrorMessage.toLowerCase().includes('password')) {
                     this.showForgotPassword = true;
                 }
+                this.cdr.detectChanges();
             }
         });
     }
@@ -101,20 +114,20 @@ export class LoginComponent {
         }
 
         this.isLoading = true;
-    
         const { username, email, password } = this.registerForm.value;
-        const cleanUserData = { username, email, password };
-
-        this.authService.register(cleanUserData).subscribe({
+        
+        this.authService.register({ username, email, password }).subscribe({
             next: () => {
                 this.isLoading = false;
                 this.registerForm.reset();
                 this.switchMode('login');
+                this.cdr.detectChanges();
             },
             error: (error) => {
                 this.isLoading = false;
                 this.registerSubmitFailed = true;
                 this.serverErrorMessage = error.error?.message || 'Registration failed';
+                this.cdr.detectChanges();
             }
         });
     }

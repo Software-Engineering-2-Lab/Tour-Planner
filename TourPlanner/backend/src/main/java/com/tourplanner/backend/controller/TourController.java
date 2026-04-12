@@ -19,11 +19,6 @@ public class TourController {
 
     private final ITourService tourService;
 
-    @GetMapping
-    public ResponseEntity<List<TourDTO>> getAllTours() {
-        return ResponseEntity.ok(tourService.findAll());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<TourDTO> getTourById(@PathVariable Long id) {
         return ResponseEntity.ok(tourService.findById(id));
@@ -51,4 +46,8 @@ public class TourController {
         return ResponseEntity.ok(tourService.search(query));
     }
 
+    @GetMapping("/user/{userId}")
+        public ResponseEntity<List<TourDTO>> getToursByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(tourService.findByUserId(userId));
+    }
 }

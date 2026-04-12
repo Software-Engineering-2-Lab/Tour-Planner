@@ -21,4 +21,6 @@ public interface TourRepository extends JpaRepository<Tour,Long> {
             "LOWER(t.description) LIKE LOWER(CONCAT('%', :q, '%')) OR " +
             "LOWER(l.comment) LIKE LOWER(CONCAT('%', :q, '%'))")
     List<Tour> fullTextSearch(@Param("q") String text);
+
+    List<Tour> findByUserId(Long userId);
 }

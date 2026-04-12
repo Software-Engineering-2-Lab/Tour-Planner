@@ -5,6 +5,7 @@ import com.tourplanner.backend.entity.User;
 import com.tourplanner.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -14,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
-
+    private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     @PostMapping("/register")
@@ -26,10 +27,10 @@ public class AuthController {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword())); // HASH AICI
 
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.ok(savedUser);
+        userRepository.save(user);
+        return ResponseEntity.ok(Map.of("message", "User registered successfully"));
     }
 
     @PostMapping("/login")
@@ -37,9 +38,17 @@ public class AuthController {
         String email = credentials.get("email");
         String password = credentials.get("password");
 
-        return userRepository.findByEmail(email)
-                .filter(u -> u.getPassword().equals(password))
-                .map(u -> ResponseEntity.ok(Map.of("token", "dummy-jwt-token", "userId", u.getId())))
-                .orElse(ResponseEntity.status(401).body(Map.of("message", "Invalid credentials")));
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        return ResponseEntity.ok(Map.of(
+            "token", "dummy-jwt-token", 
+            "userId", user.getId(),
+            "username", user.getUsername()
+        ));
     }
 }

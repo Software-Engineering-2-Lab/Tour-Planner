@@ -10,7 +10,7 @@ public interface ITourService {
     TourDTO create(TourDTO tourDTO);
     TourDTO update (long id , TourDTO tourDTO);
     void delete (long id);
-    List<TourDTO> findAll();
     TourDTO findById(long id);
     SearchResultDTO search(String query);
+    List<TourDTO> findByUserId(Long userId);
 }
