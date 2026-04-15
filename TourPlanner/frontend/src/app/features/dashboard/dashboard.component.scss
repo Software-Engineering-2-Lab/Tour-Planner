@@ -1,10 +1,14 @@
 :host {
-    --bg-page: #a0a0a0;       
-    --bg-island: #d6d6d6;     
-    --bg-map: #e0e0e0;        
-    --border-main: 2px solid #000;
-    --border-dashed: 2px dashed #000;
-    --spacing: 15px;
+    --bg-page:    #f2f2f0;
+    --bg-island:  #ffffff;
+    --bg-map:     #f2f2f0;
+    --color-ink:  #0a0a0a;
+    --color-muted:#888888;
+    --border:     1px solid #0a0a0a;
+    --border-soft:1px solid #e0e0e0;
+    --radius:     0px;
+    --spacing:    16px;
+    --font:       'DM Mono', 'Courier New', monospace;
 }
 
 .dashboard-viewport {
@@ -16,6 +20,7 @@
     background-color: var(--bg-page);
     gap: var(--spacing);
     box-sizing: border-box;
+    font-family: var(--font);
 }
 
 .dashboard-body {
@@ -26,9 +31,9 @@
 }
 
 .sidebar-island {
-    width: 250px;
+    width: 260px;
     background-color: var(--bg-island);
-    border: var(--border-main);
+    border: var(--border);
     display: flex;
     flex-direction: column;
 }
@@ -36,7 +41,7 @@
 .details-island {
     flex: 1;
     background-color: var(--bg-island);
-    border: var(--border-main);
+    border: var(--border);
     display: flex;
     flex-direction: column;
     overflow: hidden;

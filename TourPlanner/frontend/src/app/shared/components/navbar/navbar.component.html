@@ -8,8 +8,11 @@
     </div>
 
     <div class="navbar-actions">
-        <button class="btn-primary">+ New Tour</button>
-        <button class="btn-secondary">Import</button>
+        <button class="btn-primary" (click)="openAddTour()">+ New Tour</button>
+        @if (isTourModalOpen()) {
+        <app-tour-modal (close)="closeTourModal()"></app-tour-modal>
+        }   
+        <button class="btn-secondary" >Import</button>
         <button class="btn-icon" routerLink="/profile">
             <span>User</span>
         </button>

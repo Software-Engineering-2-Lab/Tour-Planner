@@ -52,10 +52,11 @@
         <div class="table-row">
             <div class="label-cell">Rating</div>
             <div class="input-cell rating-stars">
-                <span *ngFor="let s of [1,2,3,4,5]" 
-                      (click)="setRating(s)" 
+                @for (s of [1,2,3,4,5]; track s) 
+                {<span (click)="setRating(s)" 
                       [innerHTML]="s <= rating ? '&#9733;' : '&#9734;'">
                 </span>
+            }
             </div>
         </div>
 
