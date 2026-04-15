@@ -1,0 +1,69 @@
+// user-profile.component.scss
+:host {
+  display: block;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: #ffffff;  // force white background
+  color: #111111;              // force dark text
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #111111;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  label {
+    margin-bottom: 4px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #111111;
+  }
+
+  input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #111111;
+
+    &:focus {
+      outline: none;
+      border-color: #4a90e2;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &[type="submit"] {
+      background-color: #4a90e2;
+      color: white;
+      &:hover { background-color: #357abd; }
+    }
+
+    &[type="button"] {
+      background-color: #e0e0e0;
+      color: #111;
+      &:hover { background-color: #cccccc; }
+    }
+  }
+}
