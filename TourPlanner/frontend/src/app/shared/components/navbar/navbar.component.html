@@ -12,7 +12,15 @@
         @if (isTourModalOpen()) {
         <app-tour-modal (close)="closeTourModal()"></app-tour-modal>
         }   
-        <button class="btn-secondary" >Import</button>
+        <input 
+            type = "file"
+            #fileInput
+            accept=".json"
+            multiple
+            style ="display:none"
+            (change)="onImport($event)"
+            />
+        <button class="btn-secondary" (click)="fileInput.click()" >Import</button>
         <button class="btn-icon" routerLink="/profile">
             <span>User</span>
         </button>

@@ -31,7 +31,7 @@ export class AuthService {
 
     saveToken(token: string) {
     localStorage.setItem('token', token);
-    this._isLoggedIn.set(true); // Label: Notify the app immediately
+    this._isLoggedIn.set(true); 
 }
 
     logout() {

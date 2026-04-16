@@ -35,6 +35,25 @@ public class TourController {
         return ResponseEntity.ok(tourService.update(id, tourDTO));
     }
 
+    @GetMapping("/{id}/export")
+    public ResponseEntity<TourDTO> exportTour(@PathVariable Long id) {
+        TourDTO tour = tourService.findById(id);
+        return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=\"tour-"+id+".json\"")
+            .body(tour);
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<List<TourDTO>> importTours(@RequestBody List<TourDTO> tours) {
+        List<TourDTO> created = tours.stream()
+            .map(tour-> {
+                tour.setId(null);
+                return tourService.create(tour);
+            })
+            .toList();
+        return ResponseEntity.ok(created);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTour(@PathVariable Long id) {
         tourService.delete(id);

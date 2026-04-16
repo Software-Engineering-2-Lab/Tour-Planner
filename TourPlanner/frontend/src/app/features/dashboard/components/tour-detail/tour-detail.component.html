@@ -13,7 +13,7 @@
             <div class="header-actions">
                 <button class="btn-icon" (click)="openEditTour()">&#9998; Edit</button>
                 <button class="btn-icon" (click)="onDeleteTour()">&#10006; Delete</button>
-                <button class="btn-icon">Export</button>
+                <button class="btn-icon" (click)="onExport()">Export</button>
             </div>
 
             @if (isTourModalOpen()) {
@@ -99,16 +99,8 @@
                     </div>
                     } @empty {
                         <div class="no-data-message">
-                            Nu exista log-uri pentru acest tur
+                            No logs found
                         </div>
-                        
-                    }
-                    
-
-                    @if (filteredLogs.length === 0) {
-                    <div class="table-row empty">
-                        <p>No logs found.</p>
-                    </div>  
                     }
                     
                 </div>

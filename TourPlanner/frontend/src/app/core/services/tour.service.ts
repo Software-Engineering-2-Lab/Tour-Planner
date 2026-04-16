@@ -4,6 +4,7 @@ import { CreateTourDto, Tour } from '../models/tour.model';
 import { TourLog } from '../models/tour-log.model';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import {tap} from 'rxjs/operators'
 
 @Injectable({
     providedIn: 'root'
@@ -44,7 +45,6 @@ export class TourService {
         });
     }
 
-    // Update the currently selected tour and trigger log loading
     selectTour(tour: Tour | null): void {
         this.selectedTour.set(tour);
         if (tour) {
@@ -54,24 +54,21 @@ export class TourService {
         }
     }
 
-    //  Injecting userId into the payload before sending it to the server
-    addTour(tourData: CreateTourDto): void {
+    addTour(tourData: CreateTourDto): Observable<Tour> {
         const userId = localStorage.getItem('userId');
         const payload = { 
             ...tourData, 
             userId: userId ? Number(userId) : null 
         };
 
-        this.http.post<Tour>(`${this.API_URL}/tours`, payload).subscribe({
-            next: (savedTour) => {
+        return this.http.post<Tour>(`${this.API_URL}/tours`, payload).pipe(
+            tap(savedTour => {
                 this.tours.update(current => [...current, savedTour]);
                 this.selectTour(savedTour);
-            },
-            error: (err) => console.error('Error creating tour:', err)
-        });
+            })
+        );
     }
 
-    // Update tour details and sync the selected tour signal
     updateTour(updatedTour: Tour): void {
         this.http.put<Tour>(`${this.API_URL}/tours/${updatedTour.id}`, updatedTour).subscribe(res => {
             this.tours.update(current => current.map(t => t.id === res.id ? res : t));
@@ -81,7 +78,6 @@ export class TourService {
         });
     }
 
-    // Permanently delete a tour and clear associated signals
     deleteTour(tourId: number): void {
         this.http.delete(`${this.API_URL}/tours/${tourId}`).subscribe(() => {
             this.tours.update(current => current.filter(t => t.id !== tourId));
@@ -92,24 +88,20 @@ export class TourService {
         });
     }
 
-    // Retrieve all logs for a specific tour from the backend
     loadLogsForTour(tourId: number): void {
         this.http.get<TourLog[]>(`${this.API_URL}/tours/${tourId}/logs`).subscribe(data => {
             this.logs.set(data);
         });
     }
 
-    // Add a new log and return the observable for component subscription
     addLog(log: TourLog): Observable<TourLog> {
         return this.http.post<TourLog>(`${this.API_URL}/tours/${log.tourId}/logs`, log);
     }
 
-    // Update an existing log and return the observable for component subscription
     updateLog(updatedLog: TourLog): Observable<TourLog> {
         return this.http.put<TourLog>(`${this.API_URL}/tours/${updatedLog.tourId}/logs/${updatedLog.id}`, updatedLog);
     }
 
-    // Delete a specific log via the hierarchical tour-based route
     deleteLog(logId: number, tourId: number): void {
         this.http.delete(`${this.API_URL}/tours/${tourId}/logs/${logId}`).subscribe(() => {
             this.logs.update(current => current.filter(l => l.id !== logId));

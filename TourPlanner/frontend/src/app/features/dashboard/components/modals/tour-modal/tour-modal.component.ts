@@ -68,7 +68,10 @@ export class TourModalComponent implements OnInit {
                 childFriendliness: 0,
                 userId: Number(localStorage.getItem('userId'))
             }
-            this.tourService.addTour(newTour);
+            this.tourService.addTour(newTour).subscribe({
+                next: () => this.close.emit(),
+                error : () => alert('Failed to save tour.')
+            });
         }
         this.close.emit();
     }

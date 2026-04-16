@@ -7,7 +7,7 @@ import { MapComponent } from '../map/map.component';
 import { LogModalComponent } from '../modals/log-modal/log-modal.component';
 import { TourModalComponent } from '../modals/tour-modal/tour-modal.component';
 import { TourPhotosComponent } from '../tour-photos/tour-photos.component';
-
+import { ExportImportService } from '../../../../core/services/export-import.service';
 type TourTab = 'details' | 'photos';
 
 @Component({
@@ -20,6 +20,7 @@ type TourTab = 'details' | 'photos';
 export class TourDetailComponent {
     private tourService = inject(TourService);
     private dialog = inject(MatDialog);
+    private exportImport = inject(ExportImportService);
 
     activeTab = signal<TourTab>('details');
     searchTerm = signal('');
@@ -103,5 +104,10 @@ export class TourDetailComponent {
         if (value >= 8) return 'HARD';
         if (value >= 5) return 'MEDIUM';
         return 'EASY';
+    }
+
+    onExport():void {
+        const tour = this.selectedTour();
+        if (tour) this.exportImport.exportTour(tour);
     }
 }
