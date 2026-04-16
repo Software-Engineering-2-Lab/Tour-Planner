@@ -8,6 +8,9 @@
   border-radius: 10px;
   border: 1px solid #e5e7eb;
   overflow: hidden;
+  // Contain Leaflet's internal z-indices so they never escape this element
+  isolation: isolate;
+  z-index: 0;
 }
 
 .map-overlay {

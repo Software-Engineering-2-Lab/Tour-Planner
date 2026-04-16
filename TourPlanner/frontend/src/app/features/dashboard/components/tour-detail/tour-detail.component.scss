@@ -14,21 +14,26 @@
     gap: 28px;
 }
 
-// ── Map ──────────────────────────────────────────────────────────────────────
+// ── Map ───────────────────────────────────────────────────────────────────────
 .map-island {
     height: 300px;
     border: 1px solid #e0e0e0;
     background-color: #f7f7f7;
+    overflow: hidden;
+    flex-shrink: 0;
+    // Create an isolated stacking context so the map never floats above the sidebar
+    isolation: isolate;
+    z-index: 0;
 }
 
-// ── Content ──────────────────────────────────────────────────────────────────
+// ── Content ───────────────────────────────────────────────────────────────────
 .detail-content {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-// ── Header ───────────────────────────────────────────────────────────────────
+// ── Header ────────────────────────────────────────────────────────────────────
 .content-header {
     display: flex;
     justify-content: space-between;
@@ -55,6 +60,7 @@
         display: flex;
         gap: 8px;
         align-items: center;
+        flex-shrink: 0;
     }
 }
 
@@ -77,7 +83,7 @@
     }
 }
 
-// ── Tabs ─────────────────────────────────────────────────────────────────────
+// ── Tabs ──────────────────────────────────────────────────────────────────────
 .tabs-row {
     display: flex;
     gap: 0;
@@ -107,7 +113,7 @@
     }
 }
 
-// ── Stats grid ───────────────────────────────────────────────────────────────
+// ── Stats grid ────────────────────────────────────────────────────────────────
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -143,7 +149,7 @@
     color: #ccc;
 }
 
-// ── Logs section ─────────────────────────────────────────────────────────────
+// ── Logs section ──────────────────────────────────────────────────────────────
 .logs-section {
     display: flex;
     flex-direction: column;
@@ -193,7 +199,7 @@
     }
 }
 
-// ── Logs table ───────────────────────────────────────────────────────────────
+// ── Logs table ────────────────────────────────────────────────────────────────
 .logs-table {
     display: flex;
     flex-direction: column;
@@ -271,7 +277,14 @@
     }
 }
 
-// ── Description ──────────────────────────────────────────────────────────────
+.no-data-message {
+    padding: 20px;
+    text-align: center;
+    color: #aaa;
+    font-size: 0.82rem;
+}
+
+// ── Description ───────────────────────────────────────────────────────────────
 .description-area {
     .section-label {
         font-size: 0.65rem;
@@ -291,5 +304,105 @@
         line-height: 1.7;
         font-size: 0.88rem;
         color: #333;
+    }
+}
+
+// ── Mobile ────────────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+    .detail-container {
+        padding: 16px;
+        gap: 20px;
+    }
+
+    .map-island {
+        height: 200px;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+
+    // Title and actions stack vertically
+    .content-header {
+        flex-direction: column;
+        gap: 10px;
+
+        .title-info h2 {
+            font-size: 1.2rem;
+        }
+
+        .header-actions {
+            width: 100%;
+            justify-content: flex-start;
+
+            .btn-icon {
+                padding: 6px 10px;
+                font-size: 0.72rem;
+            }
+        }
+    }
+
+    // Stats go 2×2 instead of 1×4
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-card .stat-value {
+        font-size: 1.1rem;
+    }
+
+    // Logs controls wrap
+    .logs-controls {
+        flex-wrap: wrap;
+
+        .log-search {
+            order: 3;
+            width: 100%;
+            flex: none;
+        }
+    }
+
+    // Logs table: hide header, render each row as a card
+    .table-header {
+        display: none;
+    }
+
+    .table-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 12px 14px;
+        border-top: 1px solid #e0e0e0;
+        position: relative;
+
+        // Show date as a small label above
+        .col-date {
+            font-size: 0.7rem;
+            color: #888;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .col-desc {
+            font-size: 0.88rem;
+            white-space: normal; // Allow wrapping on mobile
+            overflow: visible;
+            text-overflow: unset;
+        }
+
+        .col-stats {
+            flex-wrap: wrap;
+        }
+
+        .col-rating {
+            font-size: 0.82rem;
+        }
+
+        .col-actions {
+            justify-content: flex-start;
+            margin-top: 4px;
+        }
+    }
+
+    .tabs-row .tab-btn {
+        padding: 9px 16px;
     }
 }

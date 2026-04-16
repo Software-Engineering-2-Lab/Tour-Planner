@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, output } from '@angular/core';
 import { RouterModule, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { TourModalComponent } from '../../../features/dashboard/components/modals/tour-modal/tour-modal.component';
@@ -15,6 +15,7 @@ export class NavbarComponent {
     private exportImport = inject(ExportImportService);
     isTourModalOpen = signal(false); 
 
+    toggleSidebar = output<void>()
     constructor(
         private authService: AuthService,
         private router: Router
@@ -41,4 +42,6 @@ export class NavbarComponent {
         console.log('userId:', userId);
         this.exportImport.importTours(files, userId);
     } 
+
+
 }

@@ -4,7 +4,6 @@ import { CreateTourDto, Tour } from '../models/tour.model';
 import { TourLog } from '../models/tour-log.model';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import {tap} from 'rxjs/operators'
 
 @Injectable({
     providedIn: 'root'
@@ -54,19 +53,20 @@ export class TourService {
         }
     }
 
-    addTour(tourData: CreateTourDto): Observable<Tour> {
+    addTour(tourData: CreateTourDto): void {
         const userId = localStorage.getItem('userId');
         const payload = { 
             ...tourData, 
             userId: userId ? Number(userId) : null 
         };
 
-        return this.http.post<Tour>(`${this.API_URL}/tours`, payload).pipe(
-            tap(savedTour => {
+        this.http.post<Tour>(`${this.API_URL}/tours`, payload).subscribe({
+            next: (savedTour) => {
                 this.tours.update(current => [...current, savedTour]);
                 this.selectTour(savedTour);
-            })
-        );
+            },
+            error: (err) => console.error('Error creating tour:', err)
+        });
     }
 
     updateTour(updatedTour: Tour): void {
