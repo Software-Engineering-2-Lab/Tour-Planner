@@ -17,11 +17,13 @@ This project follows a **Layered Architecture** pattern, ensuring a clean separa
 
 ```text
 .
-├── backend/            # Spring Boot Application
-│   └── src/main/java/  # Layered Java source code (DAL, BL, PL)
-├── frontend/           # Angular Application (UI/UX)
-├── Protocol/           # Project documentation and UML diagrams
-└── docker-compose.yml  # Container orchestration for App & DB
+├── TourPlanner/                # Entire Source Code of the application
+│   ├── backend/                # Spring Boot Application
+│   │   └── src/main/java/      # Layered Java source code 
+│   ├── frontend/               # Angular Application (UI/UX)
+|   └── docker-compose.yml      # Container orchestration for App & DB
+├── Protocol/                   # Project documentation and UML diagrams
+└── README.md                   
 
 ```
 
@@ -30,13 +32,22 @@ This project follows a **Layered Architecture** pattern, ensuring a clean separa
 Since the project is fully dockerized, you only need Docker Desktop installed to start the entire ecosystem.
 
 1. Clone the repository:
-git clone https://github.com/Armand-Veress/Software-Engineering-2-LAB-.git
+git clone https://github.com/Software-Engineering-2-Lab/Tour-Planner
 
 2. Start the containers:
-Navigate to the root directory and run:
+Navigate to the /TourPlanner directory and run:
+```bash
 docker-compose up --build
+```
 
 3. Access Points:
 - Frontend UI: http://localhost:4200
 - Backend API: http://localhost:8080
 - Database: Port 5432
+
+For testing the application go directly to http://localhost:4200.
+
+## Team members:
+* Anghel Mihai-Alexandru
+* Resitca Daniel
+* Veress Armand

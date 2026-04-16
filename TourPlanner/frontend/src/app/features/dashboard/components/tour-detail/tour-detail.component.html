@@ -61,9 +61,6 @@
                     <span class="stat-label">CHILD-FRIENDLY</span>
                 </div>
             </div>
-        }
-            
-        
 
             <div class="logs-section">
                 <div class="logs-controls">
@@ -98,17 +95,9 @@
                         </div>
                     </div>
                     } @empty {
-                        <div class="no-data-message">
-                            Nu exista log-uri pentru acest tur
-                        </div>
-                        
-                    }
-                    
-
-                    @if (filteredLogs.length === 0) {
-                    <div class="table-row empty">
-                        <p>No logs found.</p>
-                    </div>  
+                        <div class="table-row empty">
+                            <p>No logs found.</p>
+                        </div>  
                     }
                     
                 </div>
@@ -120,7 +109,9 @@
                     {{ selectedTour()?.description }}
                 </div>
             </div>
+        }
         </div>
+
         @if (activeTab()==='photos' && selectedTour(); as tour) {
          <div>
             <app-tour-photos [tourId]="tour.id"></app-tour-photos>
