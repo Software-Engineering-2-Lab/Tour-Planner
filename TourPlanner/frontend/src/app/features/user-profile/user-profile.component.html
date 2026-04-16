@@ -11,7 +11,6 @@
   <section class="profile-section">
     <h3>Account Details</h3>
 
-    <!-- Username -->
     <div class="detail-row">
       <div class="detail-info">
         <span class="detail-label">Username</span>
@@ -21,15 +20,20 @@
         {{ showUsernameForm ? 'Cancel' : 'Change' }}
       </button>
     </div>
-    <div *ngIf="showUsernameForm" class="inline-form">
+    @if (showUsernameForm) {
+      <div class="inline-form">
       <input type="text" [formControl]="usernameControl" placeholder="New username" />
-      <span class="error" *ngIf="usernameControl.touched && usernameControl.errors?.['minlength']">
+      @if ( usernameControl.touched && usernameControl.errors?.['minlength']) {
+        <span class="error">
         At least 3 characters
       </span>
+      }
+      
       <button class="btn-save" (click)="onSave('username')" [disabled]="usernameControl.invalid">Save</button>
     </div>
+    }
+    
 
-    <!-- Email -->
     <div class="detail-row">
       <div class="detail-info">
         <span class="detail-label">Email</span>
@@ -39,15 +43,20 @@
         {{ showEmailForm ? 'Cancel' : 'Change' }}
       </button>
     </div>
-    <div *ngIf="showEmailForm" class="inline-form">
-      <input type="email" [formControl]="emailControl" placeholder="New email" />
-      <span class="error" *ngIf="emailControl.touched && emailControl.errors?.['email']">
-        Enter a valid email
-      </span>
-      <button class="btn-save" (click)="onSave('email')" [disabled]="emailControl.invalid">Save</button>
-    </div>
+    @if (showEmailForm) {
+      <div class="inline-form">
+        <input type="email" [formControl]="emailControl" placeholder="New email" />
+        @if (emailControl.touched && emailControl.errors?.['email']) {
+        <span class="error">
+          Enter a valid email
+        </span>
+        }
+        
+        <button class="btn-save" (click)="onSave('email')" [disabled]="emailControl.invalid">Save</button>
+      </div>
+    }
+    
 
-    <!-- Password -->
     <div class="detail-row">
       <div class="detail-info">
         <span class="detail-label">Password</span>
@@ -57,20 +66,26 @@
         {{ showPasswordForm ? 'Cancel' : 'Change' }}
       </button>
     </div>
-    <div *ngIf="showPasswordForm" class="inline-form">
+    @if (showPasswordForm) {
+      <div class="inline-form">
       <input type="password" [formControl]="passwordControl" placeholder="New password" />
       <input type="password" [formControl]="confirmPasswordControl" placeholder="Confirm new password" />
       <span class="error" *ngIf="passwordControl.touched && passwordControl.errors?.['minlength']">
         At least 6 characters
       </span>
-      <span class="error" *ngIf="profileForm.errors?.['mismatch'] && confirmPasswordControl.touched">
+      @if (profileForm.errors?.['mismatch'] && confirmPasswordControl.touched) {
+        <span class="error">
         Passwords do not match
       </span>
+      }
+      
       <button class="btn-save" (click)="onSave('password')"
         [disabled]="passwordControl.invalid || confirmPasswordControl.invalid || profileForm.errors?.['mismatch']">
         Save
       </button>
     </div>
+    }
+    
 
   </section>
 
