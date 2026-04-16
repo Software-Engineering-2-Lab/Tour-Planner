@@ -78,6 +78,9 @@ export class TourModalComponent implements OnInit {
     ngOnInit(): void {
         if (this.editTour) {
             this.name = this.editTour.name;
+            this.fromLocation = this.editTour.fromLocation;
+            this.toLocation = this.editTour.toLocation;
+            this.transportType = this.editTour.transportType;
             this.description = this.editTour.description;
             this.distance = this.editTour.distance;
             this.estimatedTime = this.editTour.estimatedTime;

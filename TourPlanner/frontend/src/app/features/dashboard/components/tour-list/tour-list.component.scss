@@ -27,7 +27,6 @@
         font-weight: 500;
     }
 
-    // Close button shown only on mobile
     .btn-close-sheet {
         display: none;
         background: none;
@@ -128,14 +127,12 @@
     }
 }
 
-// ── Mobile ────────────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
     .sidebar-header .btn-close-sheet {
         display: block;
     }
 
     .tour-item {
-        // Bigger tap targets on touch screens
         padding: 14px 20px;
 
         .tour-name {

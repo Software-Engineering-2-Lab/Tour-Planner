@@ -48,7 +48,6 @@
     overflow: hidden;
 }
 
-// ── Mobile ────────────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
     .dashboard-viewport {
         padding: 8px;
@@ -59,9 +58,7 @@
         flex-direction: column;
     }
 
-    // On mobile the sidebar becomes a bottom sheet overlay
     .sidebar-island {
-        // Hidden by default — slides in from bottom
         position: fixed;
         bottom: 0;
         left: 0;
@@ -82,7 +79,6 @@
         }
     }
 
-    // Backdrop
     .sidebar-backdrop {
         display: block;
         position: fixed;
@@ -97,7 +93,6 @@
     }
 }
 
-// Hide backdrop on desktop
 .sidebar-backdrop {
     display: none;
 }

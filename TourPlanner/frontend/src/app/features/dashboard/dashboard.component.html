@@ -2,7 +2,6 @@
     <app-navbar (toggleSidebar)="sidebarOpen.set(!sidebarOpen())"></app-navbar>
 
     <div class="dashboard-body">
-        <!-- Backdrop tap-to-close on mobile -->
         @if (sidebarOpen()) {
             <div class="sidebar-backdrop" (click)="sidebarOpen.set(false)"></div>
         }

@@ -49,7 +49,7 @@
     }
 
     .btn-tours-toggle {
-        display: none; // Hidden on desktop
+        display: none; 
         padding: 6px 12px;
         border: 1px solid #000;
         background: #fff;
@@ -60,7 +60,6 @@
     }
 }
 
-// ── Mobile ────────────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
     .navbar {
         height: auto;
@@ -72,7 +71,6 @@
             font-size: 1.1rem;
         }
 
-        // Hide search bar on small screens to save space
         .navbar-search {
             display: none;
         }
@@ -80,7 +78,6 @@
         .navbar-actions {
             gap: 6px;
 
-            // Hide less critical buttons on very small screens
             .btn-icon,
             .btn-outline {
                 display: none;
@@ -92,7 +89,6 @@
             }
         }
 
-        // Show the tours toggle button on mobile
         .btn-tours-toggle {
             display: block;
         }

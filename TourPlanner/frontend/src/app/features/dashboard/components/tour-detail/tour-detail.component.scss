@@ -14,26 +14,22 @@
     gap: 28px;
 }
 
-// ── Map ───────────────────────────────────────────────────────────────────────
 .map-island {
     height: 300px;
     border: 1px solid #e0e0e0;
     background-color: #f7f7f7;
     overflow: hidden;
     flex-shrink: 0;
-    // Create an isolated stacking context so the map never floats above the sidebar
     isolation: isolate;
     z-index: 0;
 }
 
-// ── Content ───────────────────────────────────────────────────────────────────
 .detail-content {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-// ── Header ────────────────────────────────────────────────────────────────────
 .content-header {
     display: flex;
     justify-content: space-between;
@@ -64,7 +60,6 @@
     }
 }
 
-// ── Shared button base ────────────────────────────────────────────────────────
 .btn-icon {
     padding: 7px 16px;
     border: 1px solid #0a0a0a;
@@ -83,7 +78,6 @@
     }
 }
 
-// ── Tabs ──────────────────────────────────────────────────────────────────────
 .tabs-row {
     display: flex;
     gap: 0;
@@ -113,7 +107,6 @@
     }
 }
 
-// ── Stats grid ────────────────────────────────────────────────────────────────
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -149,7 +142,6 @@
     color: #ccc;
 }
 
-// ── Logs section ──────────────────────────────────────────────────────────────
 .logs-section {
     display: flex;
     flex-direction: column;
@@ -199,7 +191,6 @@
     }
 }
 
-// ── Logs table ────────────────────────────────────────────────────────────────
 .logs-table {
     display: flex;
     flex-direction: column;
@@ -284,7 +275,6 @@
     font-size: 0.82rem;
 }
 
-// ── Description ───────────────────────────────────────────────────────────────
 .description-area {
     .section-label {
         font-size: 0.65rem;
@@ -307,7 +297,6 @@
     }
 }
 
-// ── Mobile ────────────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
     .detail-container {
         padding: 16px;
@@ -320,7 +309,6 @@
         overflow: hidden;
     }
 
-    // Title and actions stack vertically
     .content-header {
         flex-direction: column;
         gap: 10px;
@@ -340,7 +328,6 @@
         }
     }
 
-    // Stats go 2×2 instead of 1×4
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -349,7 +336,6 @@
         font-size: 1.1rem;
     }
 
-    // Logs controls wrap
     .logs-controls {
         flex-wrap: wrap;
 
@@ -360,7 +346,6 @@
         }
     }
 
-    // Logs table: hide header, render each row as a card
     .table-header {
         display: none;
     }
@@ -373,7 +358,6 @@
         border-top: 1px solid #e0e0e0;
         position: relative;
 
-        // Show date as a small label above
         .col-date {
             font-size: 0.7rem;
             color: #888;
@@ -383,7 +367,7 @@
 
         .col-desc {
             font-size: 0.88rem;
-            white-space: normal; // Allow wrapping on mobile
+            white-space: normal; 
             overflow: visible;
             text-overflow: unset;
         }
