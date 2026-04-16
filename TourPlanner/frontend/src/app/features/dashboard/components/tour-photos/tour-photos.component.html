@@ -14,14 +14,18 @@
             <span class="drop-text">DROP / CLICK</span>
         </div>
 
-        <div *ngFor="let photo of uploadedPhotos; let i = index" class="photo-card">
-            <button class="delete-btn" (click)="deletePhoto(i)">&#10006;</button>
-            <div class="image-container">
-                <img [src]="photo.url">
-            </div>
-            <div class="photo-info">
-                <span class="photo-date">{{ photo.date | date:'HH:mm:ss' }}</span>
-            </div>
+       @for (photo of uploadedPhotos; track photo.url; let i = $index) {
+    <div class="photo-card">
+        <button class="delete-btn" (click)="deletePhoto(i)">&#10006;</button>
+        <div class="image-container">
+            <img [src]="photo.url">
         </div>
+        <div class="photo-info">
+            <span class="photo-date">{{ photo.date | date:'HH:mm:ss' }}</span>
+        </div>
+    </div>
+} @empty {
+    <p>No photos uploaded yet.</p>
+}
     </div>
 </div>
